@@ -24,39 +24,39 @@ def create_database():
     ]
 
     banhmi_data = [
-        ('Banh Mi', 'Baguette', 120, 310, 'High in carbs'),
-        ('Banh Mi', 'Pork', 60, 170, 'Grilled or steamed'),
-        ('Banh Mi', 'Pickled veggies', 30, 15, 'Carrot, daikon'),
-        ('Banh Mi', 'Cucumber', 20, 5, ''),
-        ('Banh Mi', 'Cilantro & chili', 5, 2, ''),
-        ('Banh Mi', 'Mayonnaise', 15, 100, '')
+        ('Banh mi', 'Baguette', 120, 310, 'High in carbs'),
+        ('Banh mi', 'Pork', 60, 170, 'Grilled or steamed'),
+        ('Banh mi', 'Pickled veggies', 30, 15, 'Carrot, daikon'),
+        ('Banh mi', 'Cucumber', 20, 5, ''),
+        ('Banh mi', 'Cilantro & chili', 5, 2, ''),
+        ('Banh mi', 'Mayonnaise', 15, 100, '')
     ]
 
     banhxeo_data = [
-        ('Banh Xeo', 'Rice flour batter', 150, 260, 'Made with coconut milk'),
-        ('Banh Xeo', 'Pork', 50, 140, 'Sliced'),
-        ('Banh Xeo', 'Shrimp', 40, 50, 'Medium-sized'),
-        ('Banh Xeo', 'Mung beans', 30, 90, 'Steamed'),
-        ('Banh Xeo', 'Bean sprouts', 50, 10, 'Low cal'),
-        ('Banh Xeo', 'Herbs & lettuce', 20, 5, 'Basil, mint, lettuce')
+        ('Banh xeo', 'Rice flour batter', 150, 260, 'Made with coconut milk'),
+        ('Banh xeo', 'Pork', 50, 140, 'Sliced'),
+        ('Banh xeo', 'Shrimp', 40, 50, 'Medium-sized'),
+        ('Banh xeo', 'Mung beans', 30, 90, 'Steamed'),
+        ('Banh xeo', 'Bean sprouts', 50, 10, 'Low cal'),
+        ('Banh xeo', 'Herbs & lettuce', 20, 5, 'Basil, mint, lettuce')
     ]
 
     comtam_data = [
-        ('Com Tam', 'Broken rice', 200, 260, 'High in carbs'),
-        ('Com Tam', 'Grilled pork chop', 120, 340, 'Marinated'),
-        ('Com Tam', 'Shredded pork skin', 50, 100, 'With toasted rice powder'),
-        ('Com Tam', 'Steamed egg meatloaf', 80, 170, 'Egg, ground pork, glass noodles'),
-        ('Com Tam', 'Pickled veggies', 30, 15, ''),
-        ('Com Tam', 'Fish sauce dip', 30, 45, 'Sweet-savory')
+        ('Com tam', 'Broken rice', 200, 260, 'High in carbs'),
+        ('Com tam', 'Grilled pork chop', 120, 340, 'Marinated'),
+        ('Com tam', 'Shredded pork skin', 50, 100, 'With toasted rice powder'),
+        ('Com tam', 'Steamed egg meatloaf', 80, 170, 'Egg, ground pork, glass noodles'),
+        ('Com tam', 'Pickled veggies', 30, 15, ''),
+        ('Com tam', 'Fish sauce dip', 30, 45, 'Sweet-savory')
     ]
 
     goicuon_data = [
-        ('Goi Cuon', 'Rice paper', 20, 35, 'Thin wrapper'),
-        ('Goi Cuon', 'Shrimp', 50, 60, 'Boiled'),
-        ('Goi Cuon', 'Pork belly', 50, 180, 'Boiled and sliced'),
-        ('Goi Cuon', 'Vermicelli noodles', 60, 90, 'Soft rice noodles'),
-        ('Goi Cuon', 'Herbs & lettuce', 30, 6, 'Mint, basil, lettuce'),
-        ('Goi Cuon', 'Peanut hoisin sauce', 30, 100, 'Sweet-savory')
+        ('Goi cuon', 'Rice paper', 20, 35, 'Thin wrapper'),
+        ('Goi cuon', 'Shrimp', 50, 60, 'Boiled'),
+        ('Goi cuon', 'Pork belly', 50, 180, 'Boiled and sliced'),
+        ('Goi cuon', 'Vermicelli noodles', 60, 90, 'Soft rice noodles'),
+        ('Goi cuon', 'Herbs & lettuce', 30, 6, 'Mint, basil, lettuce'),
+        ('Goi cuon', 'Peanut hoisin sauce', 30, 100, 'Sweet-savory')
     ]
 
     c.executemany("INSERT INTO dish_info VALUES (?, ?, ?, ?, ?)", pho_data)
@@ -68,11 +68,23 @@ def create_database():
     conn.commit()
     conn.close()
 
-def get_dish_data(dish_name):
-    conn = sqlite3.connect('calorie_data.db')
+def get_total_calories(dish_name):
+    """Return total calories for a given dish."""
+    conn = sqlite3.connect('calories.db')
     c = conn.cursor()
-    c.execute("SELECT * FROM dishes WHERE name=?", (dish_name,))
+
+    c.execute("SELECT SUM(calories) FROM dish_info WHERE dish_name = ?", (dish_name,))
     result = c.fetchone()
+    conn.close()
+    return result[0] if result and result[0] is not None else 0
+
+def get_full_dish_data(dish_name):
+    """Return full rows for a given dish."""
+    conn = sqlite3.connect('calories.db')
+    c = conn.cursor()
+
+    c.execute("SELECT * FROM dish_info WHERE dish_name = ?", (dish_name,))
+    result = c.fetchall()
     conn.close()
     return result
 

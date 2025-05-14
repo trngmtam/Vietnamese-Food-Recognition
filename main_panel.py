@@ -8,7 +8,10 @@ selected_file = None
 
 def upload_image():
     global selected_file
-    selected_file = filedialog.askopenfilename(filetypes=[("Image Files", "*.jpg *.jpeg *.png *.pdf")])
+    selected_file = filedialog.askopenfilename(filetypes=[("Image Files", "*.jpg *.jpeg *.png")])
+    if selected_file:
+        print(f"Successfully selected image: {os.path.basename(selected_file)}")
+        open_picture_panel(selected_file, root)
 
 def take_picture():
     import cv2
@@ -20,16 +23,18 @@ def take_picture():
     global selected_file
     selected_file = "captured_image.jpg"
 
-def on_enter_key(event, root):
+def on_enter_key(event):
+    global selected_file
     if not selected_file:
-        messagebox.showerror("No File Selected", "Please upload or capture a dish image first.")
+        messagebox.showerror("Error", "No image selected!")
         return
     open_picture_panel(selected_file, root)
 
 def open_main_panel():
+    global root
     root = tk.Tk()
     root.title("Food Detection - Calories Calculation")
-    root.geometry("500x400")
+    root.geometry("600x450")
 
     title = tk.Label(root, text="Food Detection - Calories Calculation", font=("Arial", 18))
     title.pack(pady=20)
