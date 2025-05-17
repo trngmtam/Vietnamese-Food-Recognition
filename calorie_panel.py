@@ -22,7 +22,7 @@ def open_calorie_panel(parent_window, dish_name, size_factor):
     frame = tk.Frame(window)
     frame.pack(pady=10)
 
-    headers = ["Ingredient", "Weight (g)", "Calories", "Notes"]
+    headers = ["Ingredient", "Weight (g)", "Calories (kcal)", "Notes"]
     for col, text in enumerate(headers):
         width = 40 if col == 3 else 20
         tk.Label(frame, text=text, borderwidth=1, relief="solid", width=width).grid(row=0, column=col)
